@@ -108,24 +108,24 @@ jobs:
 
 #     call webhook to log variable creation step
 
-  deploy-flex-project-template:
-    name: Deploy Flex Project Template
-    if: |
-      always() &&
-      !contains(needs.*.result, 'failure') &&
-      !contains(needs.*.result, 'cancelled')
-    needs: [deploy-new-environment]
-    uses: ./.github/workflows/flex_deploy.yaml
-    with:
-      environment: ${{ inputs.environment }}
-      deploy_terraform: true
-      auto_serverless_deploy: true
-      initial_release: true
-      overwrite_config: true
-    secrets:
-      TWILIO_ACCOUNT_SID: ${{ inputs.twilio_account_sid }}
-      TWILIO_API_KEY: ${{ inputs.twilio_api_key }}
-      TWILIO_API_SECRET: ${{ inputs.twilio_api_secret }}
-      TF_ENCRYPTION_KEY: ${{ inputs.tf_encryption_key }}
-
+#  deploy-flex-project-template:
+#    name: Deploy Flex Project Template
+#    if: |
+#      always() &&
+#      !contains(needs.*.result, 'failure') &&
+#      !contains(needs.*.result, 'cancelled')
+#    needs: [deploy-new-environment]
+#    uses: ./.github/workflows/flex_deploy.yaml
+#    with:
+#      environment: ${{ inputs.environment }}
+#      deploy_terraform: true
+#      auto_serverless_deploy: true
+#      initial_release: true
+#      overwrite_config: true
+#    secrets:
+#      TWILIO_ACCOUNT_SID: ${{ inputs.twilio_account_sid }}
+#      TWILIO_API_KEY: ${{ inputs.twilio_api_key }}
+#      TWILIO_API_SECRET: ${{ inputs.twilio_api_secret }}
+#      TF_ENCRYPTION_KEY: ${{ inputs.tf_encryption_key }}
+#
 #     call webhook to log flex deployment completion step
