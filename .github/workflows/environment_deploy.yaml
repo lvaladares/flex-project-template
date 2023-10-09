@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Start deployment log
+      - name: LOG - Create environment
         run: |
           curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
@@ -63,12 +63,13 @@ jobs:
           result-encoding: string
           retries: 3
           script: |
-            github.rest.repos.createOrUpdateEnvironment({
+            const environment = await github.rest.repos.createOrUpdateEnvironment({
               owner: "${{ github.actor }}",
               repo: "${{ github.event.repository.name }}".replace("${{github.actor}}/", ""),
               environment_name: "${{ inputs.environment }}",
               deployment_branch_policy: null
             });
+            core.setOutput('result', environment)
 
 #     call webhook to log environment creation step
 
@@ -82,7 +83,7 @@ jobs:
           script: |
             const sodium = require('libsodium-wrappers');
             const inputs = ${{ toJSON(inputs) }}
-            
+            const createdSecrets = [];
             function encrypt(key, secret) {
               const binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL);
               const binsec = sodium.from_string(secret);
@@ -93,22 +94,40 @@ jobs:
             }
             
             sodium.ready.then(async () => {
-              const { data } = await github.rest.actions.getEnvironmentPublicKey({
-                repository_id: "${{ github.repository_id }}",
-                environment_name: "${{ inputs.environment }}"
-              });
-              const { key, key_id } = data;
-              
-              for (const secret in inputs) {
-                await github.rest.actions.createOrUpdateEnvironmentSecret({
+              try {
+                const { data } = await github.rest.actions.getEnvironmentPublicKey({
                   repository_id: "${{ github.repository_id }}",
-                  environment_name: "${{ inputs.environment }}",
-                  secret_name: secret,
-                  encrypted_value: encrypt(key, inputs[secret]),
-                  key_id,
+                  environment_name: "${{ inputs.environment }}"
                 });
+                const { key, key_id } = data;
+                
+                for (const secret in inputs) {
+                  const createdSecret = await github.rest.actions.createOrUpdateEnvironmentSecret({
+                    repository_id: "${{ github.repository_id }}",
+                    environment_name: "${{ inputs.environment }}",
+                    secret_name: secret,
+                    encrypted_value: encrypt(key, inputs[secret]),
+                    key_id,
+                  });
+                  createdSecrets.push(createdSecret);
+                }
+                core.setOutput('result', JSON.strinfigy(createdSecrets));
+              } catch (e) { 
+                core.setFailed(JSON.stringify(e) 
               }
             });
+
+      - name: LOG - Created environment log
+        run: |
+          curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "status": "environment-creation-start",
+              "logs": {
+                "create_environment": "${{ steps.create-environment.outputs.result }}",
+                "push_environment_secrets": "${{ steps.push-environment-secrets.outputs.result }}"
+              }
+            }'
 
 #     call webhook to log variable creation step
 
