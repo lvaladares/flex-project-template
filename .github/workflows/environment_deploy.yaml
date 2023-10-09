@@ -43,10 +43,10 @@ jobs:
             -H 'Content-Type: application/json' \
             -d '{
               "status": "environment-creation-start",
-              "logs": "{
+              "logs": {
                 "environment": "${{ inputs.environment }}",
                 "twilio_account_sid": "${{ inputs.twilio_account_sid }}"
-              }"
+              }
             }'
 
       - uses: actions/setup-node@v3
