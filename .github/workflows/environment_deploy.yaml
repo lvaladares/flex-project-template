@@ -113,7 +113,7 @@ jobs:
                 }
                 core.setOutput('result', JSON.strinfigy(createdSecrets));
               } catch (e) { 
-                core.setFailed(JSON.stringify(e) 
+                core.setFailed(JSON.stringify(e));
               }
             });
 
@@ -122,7 +122,7 @@ jobs:
           curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
             -d '{
-              "status": "environment-creation-start",
+              "status": "environment-creation-finished",
               "logs": {
                 "create_environment": "${{ steps.create-environment.outputs.result }}",
                 "push_environment_secrets": "${{ steps.push-environment-secrets.outputs.result }}"
