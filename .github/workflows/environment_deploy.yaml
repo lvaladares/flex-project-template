@@ -39,11 +39,11 @@ jobs:
     steps:
       - name: Start deployment log
         run: |
-          curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
-            -H "Content-Type: application/json" \
-            -d "{ \
-              "status": "test", \
-              "logs": "string" \
+          curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log
+            -H "Content-Type: application/json"
+            -d "{
+              "status": "test",
+              "logs": "string"
             }"
       - uses: actions/setup-node@v3
         with:
