@@ -63,7 +63,6 @@ jobs:
           result-encoding: string
           retries: 3
           script: |
-            const core = require('@actions/core');
             const environment = await github.rest.repos.createOrUpdateEnvironment({
               owner: "${{ github.actor }}",
               repo: "${{ github.event.repository.name }}".replace("${{github.actor}}/", ""),
