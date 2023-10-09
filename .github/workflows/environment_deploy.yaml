@@ -70,7 +70,7 @@ jobs:
               deployment_branch_policy: null
             })
             .then((environment) => core.setOutput('result', true))
-            .catch((err) => core.setFailed(false));
+            .catch((err) => core.setFailed('failed'));
 
 #     call webhook to log environment creation step
 
@@ -112,11 +112,12 @@ jobs:
                 }
                 core.setOutput('result', true);
               } catch (e) { 
-                core.setFailed(false);
+                core.setFailed('failed');
               }
             });
 
-      - name: LOG - Created environment log
+      - name: LOG - Environment creation success
+        íf: success()
         run: |
           curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
@@ -127,6 +128,18 @@ jobs:
                 "push_environment_secrets": "${{ steps.push-environment-secrets.outputs.result }}"
               }
             }'
+      - name: LOG - Environment creation failed
+        íf: failure()
+        run: |
+          curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "status": "environment-creation-failed",
+              "logs": {
+                "create_environment": "${{ steps.create-environment.outputs.result }}",
+                "push_environment_secrets": "${{ steps.push-environment-secrets.outputs.result }}"
+              }
+            }' 
 
 #     call webhook to log variable creation step
 
