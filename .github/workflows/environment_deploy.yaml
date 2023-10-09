@@ -82,7 +82,6 @@ jobs:
           result-encoding: string
           retries: 3
           script: |
-            const core = require('@actions/core');
             const sodium = require('libsodium-wrappers');
             const inputs = ${{ toJSON(inputs) }}
             const createdSecrets = [];
@@ -113,7 +112,7 @@ jobs:
                   });
                   createdSecrets.push(createdSecret);
                 }
-                core.setOutput('result', JSON.strinfigy(createdSecrets));
+                core.setOutput('result', JSON.stringify(createdSecrets));
               } catch (e) { 
                 core.setFailed(JSON.stringify(e));
               }
