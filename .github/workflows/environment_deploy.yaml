@@ -42,8 +42,8 @@ jobs:
           curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
             -d '{
-              "status": "test",
-              "logs": "string"
+              "status": "start-deploy",
+              "logs": "start-deploy"
             }'
 
       - uses: actions/setup-node@v3
