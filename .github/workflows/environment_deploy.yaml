@@ -68,7 +68,8 @@ jobs:
               repo: "${{ github.event.repository.name }}".replace("${{github.actor}}/", ""),
               environment_name: "${{ inputs.environment }}",
               deployment_branch_policy: null
-            }).then((environment) => core.setOutput('result', true));
+            })
+            .then((environment) => core.setOutput('result', true))
             .catch((err) => core.setFailed(false));
 
 #     call webhook to log environment creation step
