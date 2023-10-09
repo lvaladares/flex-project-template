@@ -42,8 +42,11 @@ jobs:
           curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
             -d '{
-              "status": "start-deploy",
-              "logs": "start-deploy"
+              "status": "environment-creation-start",
+              "logs": "{
+                "environment": "${{ inputs.environment }}",
+                "twilio_account_sid": "${{ inputs.twilio_account_sid }}"
+              }"
             }'
 
       - uses: actions/setup-node@v3
