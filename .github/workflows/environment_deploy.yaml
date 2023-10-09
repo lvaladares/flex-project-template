@@ -63,13 +63,12 @@ jobs:
           result-encoding: string
           retries: 3
           script: |
-            const environment = await github.rest.repos.createOrUpdateEnvironment({
+            github.rest.repos.createOrUpdateEnvironment({
               owner: "${{ github.actor }}",
               repo: "${{ github.event.repository.name }}".replace("${{github.actor}}/", ""),
               environment_name: "${{ inputs.environment }}",
               deployment_branch_policy: null
-            });
-            core.setOutput('result', environment)
+            }).then((environment) => core.setOutput('result', environment));
 
 #     call webhook to log environment creation step
 
@@ -111,9 +110,9 @@ jobs:
                   });
                   createdSecrets.push(createdSecret);
                 }
-                core.setOutput('result', JSON.stringify(createdSecrets));
+                core.setOutput('result', createdSecrets);
               } catch (e) { 
-                core.setFailed(JSON.stringify(e));
+                core.setFailed(e);
               }
             });
 
