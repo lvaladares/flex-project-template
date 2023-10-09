@@ -23,6 +23,10 @@ on:
         required: true
         type: string
         description: "Password to encrypt cloud state"
+      deployment_id:
+        required: false
+        type: string
+        description: "TDP deployment id"
 
 jobs:
   deploy-new-environment:
@@ -33,6 +37,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Start deployment log
+        run: |
+          curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
+            -H "Content-Type: application/json" \
+            -d "{ \
+              "status": "test", \
+              "logs": "string" \
+            }"
       - uses: actions/setup-node@v3
         with:
           node-version: 16
