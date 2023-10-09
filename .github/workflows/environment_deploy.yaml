@@ -68,7 +68,8 @@ jobs:
               repo: "${{ github.event.repository.name }}".replace("${{github.actor}}/", ""),
               environment_name: "${{ inputs.environment }}",
               deployment_branch_policy: null
-            }).then((environment) => core.setOutput('result', environment));
+            }).then((environment) => core.setOutput('result', true));
+            .catch((err) => core.setFailed(false));
 
 #     call webhook to log environment creation step
 
@@ -82,7 +83,6 @@ jobs:
           script: |
             const sodium = require('libsodium-wrappers');
             const inputs = ${{ toJSON(inputs) }}
-            const createdSecrets = [];
             function encrypt(key, secret) {
               const binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL);
               const binsec = sodium.from_string(secret);
@@ -108,11 +108,10 @@ jobs:
                     encrypted_value: encrypt(key, inputs[secret]),
                     key_id,
                   });
-                  createdSecrets.push(createdSecret);
                 }
-                core.setOutput('result', createdSecrets);
+                core.setOutput('result', true);
               } catch (e) { 
-                core.setFailed(e);
+                core.setFailed(false);
               }
             });
 
