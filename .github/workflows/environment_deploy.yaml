@@ -160,3 +160,21 @@ jobs:
       TF_ENCRYPTION_KEY: ${{ inputs.tf_encryption_key }}
 
 #     call webhook to log flex deployment completion step
+
+  tdp-log-deploy:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - deploy-flex-project-template
+    steps:
+      - name: LOG - Flex project template deploy status
+        run: |
+          curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "status": "fpt-deploy-finished",
+              "logs": {
+                "output": "${{ toJson(needs.deploy-flex-project-template.outputs) }}",
+                "steps": "$GITHUB_STEP_SUMMARY"
+            }
+          }'
