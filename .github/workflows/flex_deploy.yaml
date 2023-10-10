@@ -282,7 +282,7 @@ jobs:
             -d '{
               "status": "fpt-deploy-finished",
               "logs": {
-                "output": "$(cat $GITHUB_OUTPUT)",
+                "output": "${{ jobs.*.outputs }}",
                 "steps": "$(cat $GITHUB_STEP_SUMMARY)"
             }
           }'
