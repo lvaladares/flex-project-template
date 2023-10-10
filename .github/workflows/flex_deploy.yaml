@@ -271,6 +271,7 @@ jobs:
 
   tdp-log-deploy:
     runs-on: ubuntu-latest
+    if: always()
     needs:
       - deploy-flex-config
     steps:
@@ -281,7 +282,7 @@ jobs:
             -d '{
               "status": "fpt-deploy-finished",
               "logs": {
-                "output": "${{ jobs.*.outputs }}",
+                "output": "$(cat $GITHUB_OUTPUT)",
                 "steps": "$(cat $GITHUB_STEP_SUMMARY)"
             }
           }'
