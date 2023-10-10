@@ -132,8 +132,8 @@ jobs:
             -d '{
               "status": "fpt-deploy-started",
               "logs": {
-                "create_environment": "${{ steps.create-environment.outputs.result }}",
-                "push_environment_secrets": "${{ steps.push-environment-secrets.outputs.result }}"
+                "environment": "${{ inputs.environment }}",
+                "twilio_account_sid": "${{ inputs.twilio_account_sid }}"
               }
             }'
 
