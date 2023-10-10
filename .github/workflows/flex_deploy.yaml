@@ -268,3 +268,20 @@ jobs:
           npm run install-flex-plugin
           npm run deploy -- --changelog="Deploy from CI/CD for commit ${{ github.sha }}"
           npm run release -- --name="Release from CI/CD for commit ${{ github.sha }}" --description="Release from CI/CD for commit ${{ github.sha }}"
+
+  tdp-log-deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy-flex-config
+    steps:
+      - name: LOG - Flex project template deploy status
+        run: |
+          curl -X POST https://lvaladares.sa.ngrok.io/deployment/${{ inputs.deployment_id }}/fpt/log \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "status": "fpt-deploy-finished",
+              "logs": {
+                "output": "$(cat $GITHUB_OUTPUT)",
+                "steps": "$(cat $GITHUB_STEP_SUMMARY)"
+            }
+          }'
