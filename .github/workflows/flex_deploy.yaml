@@ -270,6 +270,7 @@ jobs:
           npm run release -- --name="Release from CI/CD for commit ${{ github.sha }}" --description="Release from CI/CD for commit ${{ github.sha }}"
 
   tdp-log-deploy:
+    if: always()
     runs-on: ubuntu-latest
     needs:
       - deploy-flex-config
