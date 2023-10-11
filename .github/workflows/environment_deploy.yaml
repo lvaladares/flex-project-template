@@ -44,7 +44,7 @@ jobs:
           curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
             -d '{
-              "status": "environment-creation-start",
+              "status": "environment-creation-started",
               "logs": {
                 "environment": "${{ inputs.environment }}",
                 "twilio_account_sid": "${{ inputs.twilio_account_sid }}"
