@@ -27,10 +27,9 @@ on:
         required: false
         type: string
         description: "TDP deployment id"
-      tdp_config_api:
-        default: ${{ vars.TDP_CONFIG_API }}
-        description: "TDP config service endpoint for logging deploys"
-        required: false
+#      TDP_CONFIG_API:
+#        description: "TDP config service endpoint for logging deploys"
+#        required: false
 
 jobs:
   deploy-new-environment:
@@ -42,7 +41,7 @@ jobs:
     steps:
       - name: LOG - Create environment
         run: |
-          curl -X POST ${{ inputs.tdp_config_api }}/${{ inputs.deployment_id }}/fpt/log \
+          curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
             -d '{
               "status": "environment-creation-start",
@@ -121,7 +120,7 @@ jobs:
 
       - name: LOG - Environment creation success
         run: |
-          curl -X POST ${{ inputs.tdp_config_api }}/${{ inputs.deployment_id }}/fpt/log \
+          curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
             -d '{
               "status": "environment-creation-finished",
@@ -130,7 +129,7 @@ jobs:
                 "push_environment_secrets": "${{ steps.push-environment-secrets.outputs.result }}"
               }
             }'
-          curl -X POST ${{ inputs.tdp_config_api }}/${{ inputs.deployment_id }}/fpt/log \
+          curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
             -d '{
               "status": "fpt-deploy-started",
@@ -172,7 +171,7 @@ jobs:
     steps:
       - name: LOG - Flex project template deploy status
         run: |
-          curl -X POST ${{ inputs.tdp_config_api }}/${{ inputs.deployment_id }}/fpt/log \
+          curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
             -d '{
               "status": "fpt-deploy-${{ contains(needs.*.result, 'failure') && 'failed' || 'succeeded' }}",
