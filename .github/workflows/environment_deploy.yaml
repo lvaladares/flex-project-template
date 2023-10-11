@@ -174,8 +174,5 @@ jobs:
           curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
             -d '{
-              "status": "fpt-deploy-${{ contains(needs.*.result, 'failure') && 'failed' || 'succeeded' }}",
-              "logs": {
-                "output": ${{ toJson(needs.*.result) }},
-            }
+              "status": "fpt-deploy-${{ contains(needs.*.result, 'failure') && 'failed' || 'succeeded' }}"
           }'
