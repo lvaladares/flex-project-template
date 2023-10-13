@@ -40,7 +40,7 @@ jobs:
         run: |
           curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
-            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}"
+            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}" \
             -d '{
               "status": "environment-creation-started",
               "logs": {
@@ -120,7 +120,7 @@ jobs:
         run: |
           curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
-            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}"
+            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}" \
             -d '{
               "status": "environment-creation-finished",
               "logs": {
@@ -130,7 +130,7 @@ jobs:
             }'
           curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
-            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}"
+            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}" \
             -d '{
               "status": "fpt-deploy-started",
               "logs": {
@@ -169,7 +169,7 @@ jobs:
         run: |
           curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
-            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}"
+            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}" \
             -d '{
               "status": "fpt-deploy-${{ contains(needs.*.result, 'failure') && 'failed' || 'succeeded' }}"
           }'
