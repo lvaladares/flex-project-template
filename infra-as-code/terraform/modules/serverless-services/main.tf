@@ -8,8 +8,8 @@ terraform {
 }
 
 resource "twilio_serverless_service" "service" {
-  unique_name   = var.service_manifest.project
-  friendly_name = var.service_manifest.project
+  unique_name   = "fpt-${var.service_manifest.project}"
+  friendly_name = "fpt-${var.service_manifest.project}"
 }
 
 resource "twilio_serverless_environment" "environment" {

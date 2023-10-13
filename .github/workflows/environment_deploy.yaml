@@ -27,9 +27,6 @@ on:
         required: false
         type: string
         description: "TDP deployment id"
-#      TDP_CONFIG_API:
-#        description: "TDP config service endpoint for logging deploys"
-#        required: false
 
 jobs:
   deploy-new-environment:
@@ -43,6 +40,7 @@ jobs:
         run: |
           curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}"
             -d '{
               "status": "environment-creation-started",
               "logs": {
@@ -122,6 +120,7 @@ jobs:
         run: |
           curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}"
             -d '{
               "status": "environment-creation-finished",
               "logs": {
@@ -131,6 +130,7 @@ jobs:
             }'
           curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}"
             -d '{
               "status": "fpt-deploy-started",
               "logs": {
@@ -138,8 +138,6 @@ jobs:
                 "twilio_account_sid": "${{ inputs.twilio_account_sid }}"
               }
             }'
-
-#     call webhook to log variable creation step
 
   deploy-flex-project-template:
     name: Deploy Flex Project Template
@@ -161,8 +159,6 @@ jobs:
       TWILIO_API_SECRET: ${{ inputs.twilio_api_secret }}
       TF_ENCRYPTION_KEY: ${{ inputs.tf_encryption_key }}
 
-#     call webhook to log flex deployment completion step
-
   tdp-log-deploy:
     runs-on: ubuntu-latest
     if: always()
@@ -173,6 +169,7 @@ jobs:
         run: |
           curl -X POST ${{ vars.TDP_CONFIG_API }}/${{ inputs.deployment_id }}/fpt/log \
             -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer ${{ secrets.TDP_CONFIG_API_BEARER }}"
             -d '{
               "status": "fpt-deploy-${{ contains(needs.*.result, 'failure') && 'failed' || 'succeeded' }}"
           }'
