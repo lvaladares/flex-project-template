@@ -1,0 +1,24 @@
+name: Pull updates from PS main
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pull into ps-main branch
+        run: |
+          git remote add ps https://github.com/twilio-professional-services/flex-project-template.git
+          git fetch --all ps
+          git checkout -b ps-rebase main
+          git checkout -b ps-main ps/main
+          git checkout ps-rebase
+          git rebase --onto ps-main main ps-rebase
+          git add .
+          git commit -m 'PS main branch automated updates'
+          git push origin ps-rebase
+          
+          
